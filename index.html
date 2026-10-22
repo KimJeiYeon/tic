@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>틱택고 – 흰색돌 이동 튜토리얼</title>
+  <meta name="description" content="구글 틱택고 게임의 흰색돌(O) 이동 튜토리얼. 방향키로 캐릭터를 움직여 O 3개를 한 줄로 맞추세요!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-o">O</span>
+      <span class="logo-text">틱택고</span>
+      <span class="logo-x">X</span>
+    </div>
+    <p class="tagline">흰색돌을 직접 움직여 O 3개를 한 줄로!</p>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- TUTORIAL SECTION -->
+    <section class="tutorial-section" id="tutorial">
+      <div class="tutorial-header">
+        <div class="badge">📖 튜토리얼</div>
+        <h1>구글이 알려주지 않은 것</h1>
+        <p class="tutorial-desc">틱택고의 핵심은 <strong>당신이 흰색 O 돌 자체를 움직인다</strong>는 것입니다.<br/>
+        방향키(↑↓←→) 또는 WASD로 캐릭터를 이동하고, 앞에 있는 블록을 밀어낼 수 있습니다.</p>
+      </div>
+
+      <!-- TUTORIAL STEPS -->
+      <div class="tutorial-steps">
+        <div class="step-card active" id="step-card-0">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>O 캐릭터가 바로 당신!</h3>
+            <p>눈이 달린 흰색 <strong>O</strong>가 플레이어입니다. 방향키로 이동해 보세요.</p>
+          </div>
+        </div>
+        <div class="step-card" id="step-card-1">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>블록을 밀 수 있어요</h3>
+            <p>이동 방향에 X 또는 O 블록이 있으면 <strong>한 칸 밀립니다</strong>. 두 블록은 동시에 못 밉니다.</p>
+          </div>
+        </div>
+        <div class="step-card" id="step-card-2">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>O 세 개를 한 줄로!</h3>
+            <p>자신(O)을 포함해 O를 가로·세로 3개 일직선으로 만들면 승리!</p>
+          </div>
+        </div>
+        <div class="step-card" id="step-card-3">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>X 3개는 게임 오버</h3>
+            <p>실수로 X가 3개 한 줄이 되면 패배. Z키로 되돌리기, R키로 리셋.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAME BOARD SECTION -->
+    <section class="game-section" id="game">
+      <div class="game-layout">
+
+        <!-- LEFT: TUTORIAL DEMO BOARD -->
+        <div class="board-wrapper tutorial-board-wrapper">
+          <div class="board-label">
+            <span class="chip chip-tutorial">🎓 튜토리얼 보드</span>
+            <p>흰색 O는 <strong>바로 당신</strong>입니다! 방향키나 WASD로 움직여 보세요.</p>
+          </div>
+          <div class="board-container" id="tutorial-board-container">
+            <canvas id="tutorial-canvas" width="360" height="360"></canvas>
+            <div class="board-overlay" id="tutorial-overlay" style="display:none;">
+              <div class="overlay-content">
+                <div class="overlay-icon" id="tutorial-overlay-icon">🎉</div>
+                <div class="overlay-title" id="tutorial-overlay-title">성공!</div>
+                <div class="overlay-msg" id="tutorial-overlay-msg"></div>
+                <button class="btn btn-primary" id="tutorial-reset-overlay-btn">다시 해보기</button>
+              </div>
+            </div>
+          </div>
+          <div class="board-controls">
+            <div class="key-hint">
+              <span class="key">↑</span><span class="key">↓</span><span class="key">←</span><span class="key">→</span>
+              <span>또는</span>
+              <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span>
+              <span>로 이동</span>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-ghost" id="tutorial-undo-btn">↩ 되돌리기 (Z)</button>
+              <button class="btn btn-ghost" id="tutorial-reset-btn">🔄 리셋 (R)</button>
+              <button class="btn btn-ghost" id="tutorial-next-btn">다음 퍼즐 →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: FREE PLAY BOARD -->
+        <div class="board-wrapper freeplay-board-wrapper">
+          <div class="board-label">
+            <span class="chip chip-play" id="freeplay-chip">🕹️ 자유 플레이</span>
+            <p id="freeplay-desc">원하는 대로 도전! O 3개를 한 줄로 맞춰 보세요.</p>
+          </div>
+          <div class="board-container" id="freeplay-board-container">
+            <canvas id="freeplay-canvas" width="360" height="360"></canvas>
+            <div class="board-overlay" id="freeplay-overlay" style="display:none;">
+              <div class="overlay-content">
+                <div class="overlay-icon" id="freeplay-overlay-icon">🏆</div>
+                <div class="overlay-title" id="freeplay-overlay-title">승리!</div>
+                <div class="overlay-msg" id="freeplay-overlay-msg"></div>
+                <button class="btn btn-primary" id="freeplay-reset-overlay-btn">다시 시작</button>
+              </div>
+            </div>
+          </div>
+          <div class="board-controls">
+            <div class="key-hint">
+              <span>마우스로 보드를 <strong>클릭</strong>하면 해당 보드 활성화</span>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-ghost" id="freeplay-undo-btn">↩ 되돌리기 (Z)</button>
+              <button class="btn btn-ghost" id="freeplay-reset-btn">🔄 리셋 (R)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── ARCHIVE / STAGE SELECT SECTION ── -->
+    <section class="archive-section" id="archive">
+      <div class="archive-header">
+        <div class="badge badge-gold">📅 스테이지 아카이브</div>
+        <h2>이전 스테이지 전부 다시 플레이하기</h2>
+        <p class="archive-desc">날짜별로 출제된 퍼즐을 자유롭게 선택해 플레이하세요.<br/>스테이지를 클릭하면 오른쪽 <strong>자유 플레이</strong> 보드에 즉시 로드됩니다.</p>
+      </div>
+      <div class="archive-grid" id="archive-grid">
+        <!-- JS가 카드를 동적으로 삽입 -->
+      </div>
+    </section>
+
+
+    <!-- RULES SECTION -->
+    <section class="rules-section">
+      <h2>게임 규칙 한눈에 보기</h2>
+      <div class="rules-grid">
+        <div class="rule-card">
+          <div class="rule-icon">🎯</div>
+          <h3>목표</h3>
+          <p>O(당신 포함)를 가로·세로 3개 한 줄로 만들기</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">🚀</div>
+          <h3>이동</h3>
+          <p>방향키 / WASD로 흰색 O 캐릭터 이동</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">📦</div>
+          <h3>밀기</h3>
+          <p>진행 방향의 블록 1개를 밀 수 있음 (2개 이상 연속이면 불가)</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">⚠️</div>
+          <h3>패배</h3>
+          <p>X가 가로·세로 3개 한 줄이 되면 즉시 게임 오버</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">↩</div>
+          <h3>되돌리기</h3>
+          <p>Z키: 한 수 되돌리기 / R키: 처음부터 리셋</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">🧩</div>
+          <h3>팁</h3>
+          <p>항상 X를 3개 만들지 않도록 블록을 민 뒤의 결과를 미리 상상하세요</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>틱택고 튜토리얼 · 구글 일일 퍼즐의 흰색돌 이동을 체험해 보세요</p>
+  </footer>
+
+  <script src="game.js"></script>
+</body>
+</html>
